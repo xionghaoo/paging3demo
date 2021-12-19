@@ -14,6 +14,11 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+/**
+ * 分页适配器
+ *
+ * 3.1.0版本retry方法调用无效，用refresh方法替代retry，refresh会尝试从前一页开始加载
+ */
 abstract class PagingLoadAdapter<T: Any>(
     lifecycle: LifecycleOwner,
     diffCallback: DiffUtil.ItemCallback<T>

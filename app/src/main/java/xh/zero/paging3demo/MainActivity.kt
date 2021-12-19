@@ -35,6 +35,7 @@ class MainActivity : AppCompatActivity() {
 
 
         btn.setOnClickListener {
+            // 下拉刷新时重建数据流
             loadData()
         }
 
