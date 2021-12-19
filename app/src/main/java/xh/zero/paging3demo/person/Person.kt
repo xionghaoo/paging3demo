@@ -1,7 +1,6 @@
 package xh.zero.paging3demo.person
 
 import androidx.recyclerview.widget.DiffUtil
-import xh.zero.paging3demo.User
 
 class Person {
     var id: Int = 0

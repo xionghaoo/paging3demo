@@ -1,4 +1,4 @@
-package xh.zero.paging3demo.person
+package xh.zero.paging3demo.library
 
 import android.view.LayoutInflater
 import android.view.View

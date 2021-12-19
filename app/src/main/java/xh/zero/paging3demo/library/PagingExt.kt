@@ -1,4 +1,4 @@
-package xh.zero.paging3demo.person
+package xh.zero.paging3demo.library
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -18,4 +18,4 @@ fun <T: Any> ViewModel.createFlow(
     )
 ) {
     source
-}.flow.cachedIn(viewModelScope)
+}.flow

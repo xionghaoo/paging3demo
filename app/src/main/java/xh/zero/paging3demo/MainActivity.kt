@@ -2,9 +2,11 @@ package xh.zero.paging3demo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.insertFooterItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
@@ -18,43 +20,32 @@ class MainActivity : AppCompatActivity() {
         const val TAG = "PagingLog"
     }
     private val viewModel by viewModels<MainViewModel>()
-    private lateinit var adapter: UserAdapter
-    private lateinit var loadMoreStateAdapter: LoadMoreStateAdapter
 
-    private lateinit var personAdapter: PersonAdapter
+    private val adapter: PersonAdapter by lazy { PersonAdapter(this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-//        adapter = UserAdapter(this)
-
         val btn = findViewById<Button>(R.id.button)
         val rcList = findViewById<RecyclerView>(R.id.rc_list)
         rcList.layoutManager = LinearLayoutManager(this)
-        personAdapter = PersonAdapter(this)
-        rcList.adapter = personAdapter.withLoadStateAdapter()
+        // 注意这里需要赋值ConcatAdapter
+        rcList.adapter = adapter.withLoadStateAdapter()
 
-        lifecycleScope.launch {
-            viewModel.flow().collectLatest {
-                personAdapter.submitData(it)
-            }
+
+        btn.setOnClickListener {
+            loadData()
         }
 
-//        loadMoreStateAdapter = LoadMoreStateAdapter {
-//            adapter.retry()
-//        }
-//        rcList.adapter = adapter.withLoadStateFooter(loadMoreStateAdapter)
+        loadData()
+    }
 
-//        lifecycleScope.launch {
-//            // 获取最新的数据
-//            viewModel.flow.collectLatest { pagingData ->
-//                adapter.submitData(pagingData)
-//            }
-//        }
-//
-//        btn.setOnClickListener {
-//            adapter.refresh()
-//        }
+    private fun loadData() {
+        lifecycleScope.launch {
+            viewModel.flow.collectLatest {
+                adapter.submitData(it)
+            }
+        }
     }
 }

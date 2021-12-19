@@ -6,6 +6,8 @@ import android.widget.TextView
 import androidx.lifecycle.LifecycleOwner
 import xh.zero.paging3demo.MainActivity.Companion.TAG
 import xh.zero.paging3demo.R
+import xh.zero.paging3demo.library.LoadMoreState
+import xh.zero.paging3demo.library.PagingLoadAdapter
 
 class PersonAdapter(
     private val lifecycleOwner: LifecycleOwner
