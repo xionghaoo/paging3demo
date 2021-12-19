@@ -2,9 +2,11 @@ package xh.zero.paging3demo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.flow.collectLatest
@@ -22,7 +24,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        adapter = UserAdapter()
+        adapter = UserAdapter(this)
 
         val btn = findViewById<Button>(R.id.button)
         val rcList = findViewById<RecyclerView>(R.id.rc_list)
@@ -38,6 +40,7 @@ class MainActivity : AppCompatActivity() {
                 viewModel.flow.collectLatest { pagingData ->
                     adapter.submitData(pagingData)
                 }
+
             }
         }
     }

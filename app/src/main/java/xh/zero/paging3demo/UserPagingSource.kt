@@ -32,18 +32,21 @@ class UserPagingSource(
             val nextPageNumber = params.key ?: 1
 //            val response = backend.searchUsers(query, nextPageNumber)
             delay(1000)
+            val num = nextPageNumber - 1
             var response: List<User> = listOf(
-                User(0 + nextPageNumber * 5, "name_$nextPageNumber"),
-                User(1 + nextPageNumber * 5, "name_$nextPageNumber"),
-                User(2 + nextPageNumber * 5, "name_$nextPageNumber"),
-                User(3 + nextPageNumber * 5,"name_$nextPageNumber"),
-                User(4 + nextPageNumber * 5, "name_$nextPageNumber"),
+                User(0 + num * 5, "name_$nextPageNumber"),
+                User(1 + num * 5, "name_$nextPageNumber"),
+                User(2 + num * 5, "name_$nextPageNumber"),
+                User(3 + num * 5,"name_$nextPageNumber"),
+                User(4 + num * 5, "name_$nextPageNumber"),
             )
 
-            if (nextPageNumber >= 10) {
+            if (nextPageNumber >= 5) {
                 Log.d(MainActivity.TAG, "Load complete")
                 return LoadResult.Page(
-                    data = emptyList(),
+                    data = listOf(
+                        User(30, "name_$nextPageNumber"),
+                    ),
                     prevKey = null, // Only paging forward.
                     nextKey = null
                 )
