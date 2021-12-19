@@ -15,6 +15,7 @@ class PersonAdapter(
 
     override val itemLayoutId: Int
         get() = R.layout.list_item
+
     override val tailLayoutId: Int
         get() = R.layout.list_load_more
 

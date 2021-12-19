@@ -24,14 +24,27 @@ abstract class PagingLoadAdapter<T: Any>(
     diffCallback: DiffUtil.ItemCallback<T>
 ) : PagingDataAdapter<T, RecyclerView.ViewHolder>(diffCallback) {
 
+    /**
+     * 内容项视图
+     */
     abstract val itemLayoutId: Int
+
+    /**
+     * 加载状态视图
+     */
     abstract val tailLayoutId: Int
 
-    private var footerStateAdapter: FooterStateAdapter? = null
+    private val footerStateAdapter: FooterStateAdapter by lazy {
+        FooterStateAdapter(
+            tailLayoutId = tailLayoutId,
+            onBindTailView = ::onBindTailView
+        )
+    }
 
     init {
         /**
          * 数据加载状态监听
+         * LoadState.endOfPaginationReached在LoadStateAdapter中只会等于false，所以用loadStateFlow来监听等于true的情况
          */
         lifecycle.lifecycleScope.launch {
             loadStateFlow.collectLatest {
@@ -43,16 +56,10 @@ abstract class PagingLoadAdapter<T: Any>(
     /**
      * 带加载状态的组合适配器
      */
-    fun withLoadStateAdapter(): ConcatAdapter {
-        footerStateAdapter = FooterStateAdapter(
-            tailLayoutId = tailLayoutId,
-            onBindTailView = ::onBindTailView
-        )
-        return withLoadStateFooter(footerStateAdapter!!)
-    }
+    fun withLoadStateAdapter(): ConcatAdapter = withLoadStateFooter(footerStateAdapter)
 
     /**
-     * 数据加载的状态，用来判定是否显示<没有更多数据>的UI
+     * 数据加载的状态，用来判定是否显示<没有更多数据>的尾部状态行
      */
     private var loadState: LoadState = LoadState.NotLoading(false)
         set(value) {
@@ -95,6 +102,11 @@ abstract class PagingLoadAdapter<T: Any>(
         return super.getItemCount() + if (hasExtraRow()) 1 else 0
     }
 
+    /**
+     * 是否给列表尾部添加状态行
+     * 只有在全部页面加载完成时显示<没有更多数据>行，其他状态不添加尾部状态行
+     * 像<加载中>和<加载错误>这两种状态用FooterStateAdapter来显示
+     */
     private fun hasExtraRow() : Boolean = loadState is LoadState.NotLoading && loadState.endOfPaginationReached
 
     abstract fun onBindItemView(v: View, item: T?, position: Int)
@@ -111,7 +123,8 @@ abstract class PagingLoadAdapter<T: Any>(
 class TailViewHolder(v: View) : RecyclerView.ViewHolder(v)
 
 /**
- * 加载中状态适配器，和主适配器组合，显示<加载中...>的状态
+ * 加载中状态适配器，和主适配器组合，显示<加载中...>和<加载错误>的状态
+ * LoadState.endOfPaginationReached在这个Adapter中只会等于false，所以用loadStateFlow来监听等于true的情况
  */
 private class FooterStateAdapter(
     private val tailLayoutId: Int,
@@ -121,12 +134,8 @@ private class FooterStateAdapter(
     override fun onBindViewHolder(holder: TailViewHolder, loadState: LoadState) {
         val itemView = holder.itemView
         when(loadState) {
-            is LoadState.Loading -> {
-                onBindTailView(itemView, LoadMoreState.LOADING)
-            }
-            is LoadState.Error -> {
-                onBindTailView(itemView, LoadMoreState.ERROR)
-            }
+            is LoadState.Loading -> onBindTailView(itemView, LoadMoreState.LOADING)
+            is LoadState.Error -> onBindTailView(itemView, LoadMoreState.ERROR)
             else -> {}
         }
     }
