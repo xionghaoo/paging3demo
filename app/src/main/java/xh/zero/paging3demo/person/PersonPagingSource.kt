@@ -10,7 +10,7 @@ class PersonPagingSource : RemotePagingSource<Person>() {
     override suspend fun onLoad(page: Int): List<Person> {
         delay(500)
         Log.d(TAG, "onLoad: page = $page")
-        if (page == 3) throw IllegalArgumentException("加载错误")
+//        if (page == 3) throw IllegalArgumentException("加载错误")
         if (page < 5) {
             return List(10) { index ->
                 val p = Person()

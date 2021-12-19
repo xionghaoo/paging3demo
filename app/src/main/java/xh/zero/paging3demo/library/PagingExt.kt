@@ -1,21 +1,29 @@
 package xh.zero.paging3demo.library
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
-import androidx.paging.cachedIn
 
-fun <T: Any> ViewModel.createFlow(
-    source: PagingSource<Int, T>,
-    pageSize: Int
-) = Pager(
-    PagingConfig(
-        pageSize = pageSize,
-        enablePlaceholders = true,
-        prefetchDistance = 1
-    )
-) {
-    source
-}.flow
+
+//val flow = Pager(
+//    PagingConfig(
+//        pageSize = 10,
+//        enablePlaceholders = false,
+//        prefetchDistance = 2,
+//        initialLoadSize = 2
+//    )
+//) {
+//    PersonPagingSource()
+//}.flow
+
+fun <T: Any> ViewModel.dataSourceFlow(pageSize: Int, pagingSourceFactory: () -> PagingSource<Int, T>) =
+    Pager(
+        PagingConfig(
+            pageSize = pageSize,
+            enablePlaceholders = false,
+            prefetchDistance = 2,
+            initialLoadSize = 2
+        ),
+        pagingSourceFactory = pagingSourceFactory
+    ).flow
