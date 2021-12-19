@@ -33,7 +33,8 @@ class PersonAdapter(
             LoadMoreState.ERROR -> {
                 tv.text = "加载失败，请重试"
                 tv.setOnClickListener {
-                    retry()
+                    // retry调用无效，refresh会尝试重前一页开始加载页面
+                    refresh()
                 }
             }
         }

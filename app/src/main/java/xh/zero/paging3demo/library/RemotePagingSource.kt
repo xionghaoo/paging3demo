@@ -18,9 +18,11 @@ abstract class RemotePagingSource<R: Any> : PagingSource<Int, R>() {
         return try {
             val nextPage = params.key ?: 1
             val result = onLoad(nextPage)
+            Log.d(MainActivity.TAG, "load: ${result.isEmpty()}, ${nextPage + 1}")
+
             LoadResult.Page(
                 data = result,
-                prevKey = null,
+                prevKey = if (nextPage <= 1) null else nextPage - 1,
                 nextKey = if (result.isEmpty()) null else nextPage + 1
             )
         } catch (e: Exception) {

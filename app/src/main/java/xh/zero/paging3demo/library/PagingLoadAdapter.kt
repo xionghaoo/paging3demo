@@ -22,7 +22,7 @@ abstract class PagingLoadAdapter<T: Any>(
     abstract val itemLayoutId: Int
     abstract val tailLayoutId: Int
 
-    private var stateAdapter: StateAdapter? = null
+    private var footerStateAdapter: FooterStateAdapter? = null
 
     init {
         /**
@@ -39,11 +39,11 @@ abstract class PagingLoadAdapter<T: Any>(
      * 带加载状态的组合适配器
      */
     fun withLoadStateAdapter(): ConcatAdapter {
-        stateAdapter = StateAdapter(
+        footerStateAdapter = FooterStateAdapter(
             tailLayoutId = tailLayoutId,
             onBindTailView = ::onBindTailView
         )
-        return withLoadStateFooter(stateAdapter!!)
+        return withLoadStateFooter(footerStateAdapter!!)
     }
 
     /**
@@ -108,7 +108,7 @@ class TailViewHolder(v: View) : RecyclerView.ViewHolder(v)
 /**
  * 加载中状态适配器，和主适配器组合，显示<加载中...>的状态
  */
-private class StateAdapter(
+private class FooterStateAdapter(
     private val tailLayoutId: Int,
     private val onBindTailView: (v: View, state: LoadMoreState) -> Unit,
 ) : LoadStateAdapter<TailViewHolder>() {
