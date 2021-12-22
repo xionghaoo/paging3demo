@@ -33,9 +33,9 @@ class MainActivity : AppCompatActivity() {
         // 注意这里需要赋值ConcatAdapter
         rcList.adapter = adapter.withLoadStateAdapter()
 
-
         btn.setOnClickListener {
-            // 下拉刷新时重建数据流
+            // 下拉刷新时重建数据流，Adapter需要重新设置下
+            rcList.adapter = adapter.withLoadStateAdapter()
             loadData()
         }
 
