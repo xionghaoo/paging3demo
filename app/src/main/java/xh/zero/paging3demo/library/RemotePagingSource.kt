@@ -10,10 +10,11 @@ import xh.zero.paging3demo.MainActivity
  */
 abstract class RemotePagingSource<R: Any> : PagingSource<Int, R>() {
     override fun getRefreshKey(state: PagingState<Int, R>): Int? {
-        return state.anchorPosition?.let { anchorPosition ->
-            val anchorPage = state.closestPageToPosition(anchorPosition)
-            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
-        }
+//        return state.anchorPosition?.let { anchorPosition ->
+//            val anchorPage = state.closestPageToPosition(anchorPosition)
+//            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
+//        }
+        return null
     }
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, R> {
