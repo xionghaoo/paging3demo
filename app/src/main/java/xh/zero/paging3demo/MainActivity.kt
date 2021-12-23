@@ -41,13 +41,16 @@ class MainActivity : AppCompatActivity() {
         btn.setOnClickListener {
             // 下拉刷新时重建数据流
 //            rcList.swapAdapter(adapter.withLoadStateAdapter(), true)
-//            adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
-            loadData()
-            rcList.scrollToPosition(0)
-//            adapter.refresh()
+//            loadData()
+//            rcList.scrollToPosition(0)
+            adapter.refresh()
         }
 
         loadData()
+
+        findViewById<Button>(R.id.btn_retry).setOnClickListener {
+            adapter.retry()
+        }
     }
 
     private fun loadData() {
