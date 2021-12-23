@@ -63,7 +63,7 @@ abstract class PagingLoadAdapter<T: Any>(
     class ItemViewHolder(v: View) : RecyclerView.ViewHolder(v)
 }
 
-class TailViewHolder(v: View) : RecyclerView.ViewHolder(v)
+private class TailViewHolder(v: View) : RecyclerView.ViewHolder(v)
 
 /**
  * 加载中状态适配器，和主适配器组合，显示<加载中>、<加载完成>、<加载错误>的状态
@@ -91,6 +91,7 @@ private class FooterStateAdapter(
     }
 
     override fun displayLoadStateAsItem(loadState: LoadState): Boolean {
+        // 除了初始化状态返回false，其他状态都返回true
         return !(loadState is LoadState.NotLoading && !loadState.endOfPaginationReached)
     }
 

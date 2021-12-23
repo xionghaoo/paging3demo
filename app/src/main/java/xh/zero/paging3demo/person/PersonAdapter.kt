@@ -34,6 +34,7 @@ class PersonAdapter : PagingLoadAdapter<Person>(Person.DIFF) {
             LoadMoreState.ERROR -> {
                 tv.text = "加载失败，请重试"
                 tv.setOnClickListener {
+                    // PagingSource返回Error时才有效
                     retry()
                 }
             }

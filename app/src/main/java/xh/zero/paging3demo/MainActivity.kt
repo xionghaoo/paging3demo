@@ -17,13 +17,10 @@ import kotlinx.coroutines.launch
 import xh.zero.paging3demo.person.PersonAdapter
 
 class MainActivity : AppCompatActivity() {
-    companion object {
-        const val TAG = "PagingLog"
-    }
+
     private val viewModel by viewModels<MainViewModel>()
 
     private val adapter: PersonAdapter by lazy { PersonAdapter() }
-    private lateinit var layoutManager: LinearLayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,24 +28,26 @@ class MainActivity : AppCompatActivity() {
 
         val btn = findViewById<Button>(R.id.button)
         val rcList = findViewById<RecyclerView>(R.id.rc_list)
-        layoutManager = object : LinearLayoutManager(this) {
-
-        }
-        rcList.layoutManager = layoutManager
+        rcList.layoutManager = LinearLayoutManager(this)
         // 注意这里需要赋值ConcatAdapter
         rcList.adapter = adapter.withLoadStateAdapter()
 
         btn.setOnClickListener {
-            // 下拉刷新时重建数据流
-//            rcList.swapAdapter(adapter.withLoadStateAdapter(), true)
-//            loadData()
-//            rcList.scrollToPosition(0)
+            /**
+             * Paging3的数据刷新Bug，页面回到初始位置时刷新，第二页的加载不会被触发
+             * 这里需要重置下Adapter
+             */
+            rcList.swapAdapter(adapter.withLoadStateAdapter(), true)
+            /**
+             * 刷新列表，这里调adapter.refresh()或者loadData()都可以
+             */
             adapter.refresh()
         }
 
         loadData()
 
         findViewById<Button>(R.id.btn_retry).setOnClickListener {
+            // PagingSource返回Error时才有效
             adapter.retry()
         }
     }
@@ -59,5 +58,9 @@ class MainActivity : AppCompatActivity() {
                 adapter.submitData(it)
             }
         }
+    }
+
+    companion object {
+        const val TAG = "PagingLog"
     }
 }

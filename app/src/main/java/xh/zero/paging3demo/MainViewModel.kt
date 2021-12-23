@@ -13,17 +13,6 @@ import xh.zero.paging3demo.person.PersonPagingSource
 
 class MainViewModel : ViewModel() {
 
-//    val flow = Pager(
-//        PagingConfig(
-//            pageSize = 10,
-//            enablePlaceholders = false,
-//            prefetchDistance = 2,
-//            initialLoadSize = 2
-//        )
-//    ) {
-//        PersonPagingSource()
-//    }.flow
-
     val flow = dataSourceFlow(10) { PersonPagingSource() }
 
 }
