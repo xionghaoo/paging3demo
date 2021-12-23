@@ -9,6 +9,7 @@ fun <T: Any> ViewModel.dataSourceFlow(pageSize: Int, pagingSourceFactory: () -> 
     Pager(
         PagingConfig(
             pageSize = pageSize,
+            enablePlaceholders = false,
             prefetchDistance = 1
         ),
         pagingSourceFactory = pagingSourceFactory

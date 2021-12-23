@@ -7,6 +7,7 @@ import android.widget.Button
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.insertFooterItem
+import androidx.recyclerview.widget.ConcatAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.CoroutineScope
@@ -21,7 +22,8 @@ class MainActivity : AppCompatActivity() {
     }
     private val viewModel by viewModels<MainViewModel>()
 
-    private val adapter: PersonAdapter by lazy { PersonAdapter(this) }
+    private val adapter: PersonAdapter by lazy { PersonAdapter() }
+    private lateinit var layoutManager: LinearLayoutManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,14 +31,20 @@ class MainActivity : AppCompatActivity() {
 
         val btn = findViewById<Button>(R.id.button)
         val rcList = findViewById<RecyclerView>(R.id.rc_list)
-        rcList.layoutManager = LinearLayoutManager(this)
+        layoutManager = object : LinearLayoutManager(this) {
+
+        }
+        rcList.layoutManager = layoutManager
         // 注意这里需要赋值ConcatAdapter
         rcList.adapter = adapter.withLoadStateAdapter()
 
         btn.setOnClickListener {
-            // 下拉刷新时重建数据流，Adapter需要重新设置下
-            rcList.adapter = adapter.withLoadStateAdapter()
+            // 下拉刷新时重建数据流
+//            rcList.swapAdapter(adapter.withLoadStateAdapter(), true)
+//            adapter.stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.ALLOW
             loadData()
+            rcList.scrollToPosition(0)
+//            adapter.refresh()
         }
 
         loadData()

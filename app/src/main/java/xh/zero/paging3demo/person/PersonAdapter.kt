@@ -9,9 +9,7 @@ import xh.zero.paging3demo.R
 import xh.zero.paging3demo.library.LoadMoreState
 import xh.zero.paging3demo.library.PagingLoadAdapter
 
-class PersonAdapter(
-    private val lifecycleOwner: LifecycleOwner
-) : PagingLoadAdapter<Person>(lifecycleOwner, Person.DIFF) {
+class PersonAdapter : PagingLoadAdapter<Person>(Person.DIFF) {
 
     override val itemLayoutId: Int
         get() = R.layout.list_item
